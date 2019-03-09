@@ -1,1 +1,1 @@
-# HackUConn-2019
+# EHRport - The Electronic Health Records Portal
