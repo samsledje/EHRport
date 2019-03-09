@@ -26,6 +26,11 @@ class Handler(http.server.BaseHTTPRequestHandler):
             '/boards': self.post_board,
         }
 
+        self.delete_types = {
+            '/rooms': self.delete_room,
+            '/boards': self.delete_board,
+        }
+
         super(Handler, self).__init__(*args)
 
     # Request Types
@@ -97,6 +102,19 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self.DB.commit()
             return ""
 
+    def delete_room(self, **kwargs):
+        cursor = self.DB.cursor()
+        cursor.execute("DELETE FROM room_permissions WHERE doctor = {} AND room = {}".format(kwargs["doctor"], kwargs["id"]))
+        cursor.close()
+        self.DB.commit()
+        return ""
+
+    def delete_board(self, **kwargs):
+        cursor = self.DB.cursor()
+        cursor.execute("DELETE FROM board_permissions WHERE doctor = {} AND board = {} AND patient = {}".format(kwargs["doctor"], kwargs["id"], self.patid))
+        self.DB.commit()
+        return ""
+
     # Handle HTTP Requests
     def do_PUT(self):
         self.DB = mysql.connector.connect(
@@ -109,11 +127,31 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
         self.patid=1 #TODO
 
+        J = None
+
         if self.path.find('?') != -1:
             self.path, self.query_string = self.path.split('?', 1)
             params = {k: v for k, v in [x.split('=') for x in self.query_string.split('&')]}
             J = self.put_types[self.path](**params)
 
+
+        return J
+
+    def do_DELETE(self):
+        self.DB = mysql.connector.connect(
+            host=DB_HOST,
+            user='hacker',
+            passwd='hacker2019',
+            database='hack2019',
+            auth_plugin='mysql_native_password',
+        )
+
+        J = None
+
+        if self.path.find('?') != -1:
+            self.path, self.query_string = self.path.split('?', 1)
+            params = {k: v for k, v in [x.split('=') for x in self.query_string.split('&')]}
+            J = self.delete_types[self.path](**params)
 
         return J
 
