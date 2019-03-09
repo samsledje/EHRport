@@ -1,6 +1,10 @@
 class Event:
-    def __init__(self, tag, content, files = None):
-        self.tag = tag
-        self.board = GC.get_board(tag)
-        self.content = content
-        self.files = []
+    def __init__(self, _id, doctor, room, contents, create_time):
+        self._id = _id
+        self.doctor = doctor
+        self.room = room
+        self.contents = contents
+        self.create_time = create_time
+
+    def dump(self):
+        pass
