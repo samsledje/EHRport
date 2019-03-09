@@ -1,5 +1,5 @@
 ![](docs/img/logo.png)
-# The Electronic Health Records Portal
+# ![The Electronic Health Records Portal](samsledje.github.io/EHRport)
 
 Medical errors cause up to **400,000 deaths per year** and nearly **10,000 serious medical complications** each day, ... When you take a step back and look at these [errors], studies show that **80 percent** of them result from **miscommunications between caregivers** during transitions of care, ... hospitals waste **$12 billion per year**, or about 2 percent of revenue, as a result of **poor communication...** - [Dr. James Woodson, _Becker's Hospital Review_](https://www.beckershospitalreview.com/healthcare-information-technology/communication-how-to-solve-one-of-healthcare-s-biggest-problems.html)
 
