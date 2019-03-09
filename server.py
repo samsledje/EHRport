@@ -125,7 +125,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
             auth_plugin='mysql_native_password',
         )
 
-        self.patid=1 #TODO
+        self.patid = self.headers.get('patid')
 
         J = None
 
@@ -172,8 +172,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self.id = dict(cgi.parse_qsl(self.query_string))['id']
         else:
             self.query_string = None
-        #self.patid = self.headers.get('patid')
-        self.patid = '1'
+        self.patid = self.headers.get('patid')
         if self.query_string is not None:
             J = self.enter_types[self.path]()
         else:
