@@ -35,7 +35,7 @@ html {
     background-color: #FFF;
     color: #337AB7;
     text-align: center;
-    font-size: 30px;
+    font-size: 34px;
     text-decoration: none;
 }
 #back2Top:hover {
@@ -54,13 +54,19 @@ html {
     text-align: center;
     background: #EFDECD;
 }
-.whatwedo-section {
+.about2-section {
+    height: 100%;
+    padding-top: 150px;
+    text-align: center;
+    background: #EFDECD;
+}
+.business-section {
     height: 100%;
     padding-top: 150px;
     text-align: center;
     background: #fff;
 }
-.contact-section {
+.prototype-section {
     height: 100%;
     padding-top: 150px;
     text-align: center;
