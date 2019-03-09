@@ -1,5 +1,3 @@
-from GlobalContext import GC
-
 class Event:
     def __init__(self, tag, content, files = None):
         self.tag = tag
