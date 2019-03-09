@@ -60,6 +60,14 @@ html {
     text-align: center;
     background: #EFDECD;
 }
+
+.about3-section {
+    height: 100%;
+    padding-top: 100px;
+    text-align: center;
+    background: #fff;
+}
+
 .business-section {
     height: 100%;
     padding-top: 100px;
@@ -70,7 +78,7 @@ html {
     height: 100%;
     padding-top: 100px;
     text-align: center;
-    background: #fff;
+    background: #EFDECD;
 }
 .navbar-default .navbar-nav > li > a:hover {
 	color: #333;
