@@ -5,13 +5,13 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="canonical" href="https://html5-templates.com/" />
-    <title>MedDeck - Putting your health in your hands</title>
+    <title>EHRport - Putting your health in your hands</title>
     <meta name="description" content="Simplified Bootstrap template with sticky menu">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/sticky-menu.css" rel="stylesheet">
 </head>
 
-<!-- <style>
+<style>
     .column {
     float: left;
     width: 50%;
@@ -23,7 +23,21 @@
     display: table;
     clear: both;
     }
-</style> -->
+
+    q
+    {
+    font-size: 14pt !important;
+    color: #000 !important;
+    font-family: Arial !important;
+    }
+
+    p
+    {
+    font-size: 12pt !important;
+    color: #000 !important;
+    font-family: Arial !important;  
+    }
+</style>
 
 <body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -35,7 +49,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand page-scroll" href="#page-top">Welcome</a>
+                <a class="navbar-brand page-scroll" href="#page-top">EHRport</a>
             </div>
 
             <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -44,10 +58,10 @@
                         <a class="page-scroll" href="#page-top"></a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#about">How it Works</a>
+                            <a class="page-scroll" href="#business">Use Case</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#business">Use Case</a>
+                        <a class="page-scroll" href="#about">How it Works</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="#prototype">Prototype</a>
@@ -61,16 +75,55 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1><b>MedDeck</b></h1>
-                    <h3>Putting your health in your hands</h3>
-                    <p>MedDeck takes the confusion out of electronic health records (EHR) management. We put each individual in control of their own health history by aggregating all records into a single, centralized platform that they have control of. We create virtual <i>rooms</i> for your doctors to be in together, and <i>boards</i> for them to share information with each other. The result is an EHR system that puts you first.</p>
+                    <h1><b><img width=250 src='img/logo.png'></b></h1>
+                    <h3>Your Data. Your Doctors.</h3>
+                    <p>EHRport - the Electronic Health Records Portal - takes the confusion out of electronic health records management. We put each individual in control of their own health history by aggregating all records into a single repository that they control. We create virtual <i>rooms</i> for your doctors to be in together, and <i>boards</i> for them to share information with each other. The result is an EHR system that puts you first.</p>
                     <img src='img/main.jpg'>
 					<p>&nbsp;</p>
-                    <a class="btn btn-primary page-scroll" href="#about">How It Works</a>
+                    <a class="btn btn-primary page-scroll" href="#business">Why EHRport?</a>
                 </div>
             </div>
         </div>
     </section>
+
+        <!-- Use Case Section -->
+        <section id="business" class="business-section">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <q>Medical errors cause up to <b>400,000 deaths per year</b> and nearly <b>10,000 serious medical complications</b> each day, ... When you take a step back and look at these [errors], studies show that <b>80 percent</b> of them result from <b style='color: red'>miscommunications between caregivers</b> during transitions of care, ... hospitals waste <b>$12 billion per year</b>, or about 2 percent of revenue, as a result of <b style='color: red'>poor communication...</b></q> - Dr. James Woodson, <i>Becker's Hospital Review</i>
+                            <hr>
+                            <h3>Open</h3>
+                            <ul>
+                                <p>EHRport breaks down the silos between electronic health records to give all of your doctors access to the same repository of data</p>
+                                <p>Allergies, medications, chronic conditions, family history, and more all in one place</p>
+                                <p>The more your doctors communicate, the better off your are</p>
+                            </ul>
+                            <hr>
+                            <h3>Private</h3>
+                            <ul>
+                                <p>You own your records, and should decide who has access to them</p>
+                                <p>Restrict doctors to only the rooms, boards, and even individual records that you want them to see</p>
+                            </ul>
+                            <hr>
+                            <h3>Secure</h3>
+                            <ul>
+                                <p>Secure key exchange via RFID card to authenticate new doctors - requires physical contact with a trusted doctor</p>
+                                <p>End-to-end encryption for data transfer once doctors have been authenticated</p>
+                                <p>Two Factor Authentication for record access</p>
+                                <p>Basic health information available with RFID card for emergency responders</p>
+                            </ul>
+                            <hr>
+                            <h3>Cost Effective</h3>
+                            <ul>
+                            </ul>
+                            <hr>
+                            <p>&nbsp;</p>
+                            <a class="btn btn-primary page-scroll" href="#about">How It Works</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
     <!-- About -->
     <section id="about" class="about-section">
@@ -78,7 +131,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h1>How It Works</h1>
-                        <img width=900 src='img/MedDeckFlowChart.svg'>
+                        <img width=900 src='img/EHRportFlowChart.svg'>
                         <p>&nbsp;</p>
                     <a class="btn btn-primary page-scroll" href="#about2">Continue</a>
                 </div>
@@ -93,23 +146,11 @@
                         <h1>How It Works</h1>
                             <img width=850 src='img/Permissions.svg'>
                             <p>&nbsp;</p>
-                        <a class="btn btn-primary page-scroll" href="#business">Use Case</a>
+                        <a class="btn btn-primary page-scroll" href="#prototype">Prototype</a>
                     </div>
                 </div>
             </div>
         </section>
-
-    <!-- What we do Section -->
-    <section id="business" class="business-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1>Use Case</h1>
-                    <a class="btn btn-primary page-scroll" href="#prototype">Prototype</a>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- prototype Section -->
     <section id="prototype" class="prototype-section">
@@ -120,6 +161,7 @@
                     <a href="https://github.com/samsledje/MedDeck"><img src='img/GitHub-Mark-64px.png'></a>
                 </div>
             </div>
+            <p>&nbsp;</p>
             <div>
                 <a href="https://html5-templates.com/" target="_blank" rel="nofollow">HTML5 Templates</a>
             </div>
