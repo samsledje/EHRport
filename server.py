@@ -45,11 +45,17 @@ class Handler(http.server.BaseHTTPRequestHandler):
         return [{'tag': l[0]} for l in r]
 
     def get_rooms(self):
-        # returns array of room names
         cursor = self.DB.cursor()
-        cursor.execute("SELECT room.title, room._id, room.activity, room.create_time FROM room WHERE room.patient = {}".format(self.patid))
-        r = cursor.fetchall()
-        cursor.close()
+        r = []
+        if self.patid:
+            # returns array of room names
+            cursor.execute("SELECT room.title, room._id, room.activity, room.create_time FROM room WHERE room.patient = {}".format(self.patid))
+            r = cursor.fetchall()
+            cursor.close()
+        elif self.docid:
+            cursor.execute("SELECT room.title, room._id, room.activity, room.create_time FROM room WHERE room.doctor = {}".format(self.patid))
+            r = cursor.fetchall()
+            cursor.close()
         return [{'id': l[1], 'title': l[0], 'activity': l[2], 'create_time': int(time.mktime(l[3].timetuple()))} for l in r]
 
     def get_doctors(self):
@@ -75,7 +81,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
                        "WHERE event_tags.tag = \"{}\" AND room.patient = {};".format(self.id, self.patid))
         r = cursor.fetchall()
         cursor.close()
-        return [{'id': l[0], 'doctor': l[1], 'contents': l[2], 'tag': l[3], 'create_time': int(time.mktime(l[4].timetuple()))} for l in r]
+        return [{'id': l[0], 'doctor': l[1], 'contents': l[2], 'tags': l[3], 'create_time': int(time.mktime(l[4].timetuple()))} for l in r]
 
     def enter_room(self):
         print("getting room {}".format(self.id))
@@ -84,7 +90,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
         cursor.execute("SELECT event_._id, event_.doctor, event_.contents, event_.tags, event_.create_time FROM event_ WHERE event_.room = {} ORDER BY event_.create_time;".format(self.id))
         r = cursor.fetchall()
         cursor.close()
-        return [{'id': l[0], 'doctor': l[1], 'contents': l[2], 'tag': l[3], 'create_time': int(time.mktime(l[4].timetuple()))} for l in r]
+        return [{'id': l[0], 'doctor': l[1], 'contents': l[2], 'tags': l[3], 'create_time': int(time.mktime(l[4].timetuple()))} for l in r]
 
     def enter_doctor(self):
         cursor = self.DB.cursor()
