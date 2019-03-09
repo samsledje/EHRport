@@ -13,12 +13,14 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.get_types = {
             '/boards': self.get_boards,
             '/rooms': self.get_rooms,
-            '/doctors': self.get_doctors
+            '/doctors': self.get_doctors,
+            '/patients': self.get_patients,
         }
 
         self.enter_types = {
             '/boards': self.enter_board,
             '/rooms': self.enter_room,
+            '/doctors': self.enter_doctor,
         }
 
         self.put_types = {
@@ -45,18 +47,25 @@ class Handler(http.server.BaseHTTPRequestHandler):
     def get_rooms(self):
         # returns array of room names
         cursor = self.DB.cursor()
-        cursor.execute("SELECT room.title, room._id, room.activity FROM room WHERE room.patient = {}".format(self.patid))
+        cursor.execute("SELECT room.title, room._id, room.activity, room.create_time FROM room WHERE room.patient = {}".format(self.patid))
         r = cursor.fetchall()
         cursor.close()
-        return [{'id': l[1], 'title': l[0], 'activity': l[2]} for l in r]
+        return [{'id': l[1], 'title': l[0], 'activity': l[2], 'create_time': int(time.mktime(l[3].timetuple()))} for l in r]
 
     def get_doctors(self):
         # returns array of doctor names
         cursor = self.DB.cursor()
-        cursor.execute("SELECT doctor.firstname, doctor.lastname, doctor._id FROM doctor JOIN board_permissions ON doctor._id = board_permissions.doctor JOIN  patient ON patient._id = board_permissions.patient WHERE patient._id = {} GROUP BY doctor._id".format(self.patid))
+        cursor.execute("SELECT doctor._id, doctor.firstname, doctor.lastname, doctor.title, doctor.email FROM patient JOIN room ON patient._id = room.patient JOIN room_permissions ON room._id = room_permissions.room JOIN doctor ON room_permissions.doctor = doctor._id WHERE patient._id = {} GROUP BY doctor._id;".format(self.patid))
         r = cursor.fetchall()
         cursor.close()
-        return [{'id': l[2], 'first': l[0], 'last': l[1]} for l in r]
+        return [{'id': l[0], 'first': l[1], 'last': l[2], 'title': l[3], 'email': l[4]} for l in r]
+
+    def get_patients(self):
+        cursor = self.DB.cursor()
+        cursor.execute("SELECT patient.firstname, patient.lastname, patient.email FROM doctor JOIN room_permissions ON doctor._id = room_permissions.doctor JOIN room ON room_permissions.doctor = room.doctor JOIN patient ON room.patient = patient._id WHERE doctor._id = {} GROUP BY patient._id".format(self.docid))
+        r = cursor.fetchall()
+        cursor.close()
+        return [{'firstname': l[0], 'lastname': l[1], 'email': l[2]} for l in r]
 
     def enter_board(self):
         # returns json of events
@@ -76,6 +85,13 @@ class Handler(http.server.BaseHTTPRequestHandler):
         r = cursor.fetchall()
         cursor.close()
         return [{'id': l[0], 'doctor': l[1], 'contents': l[2], 'tag': l[3], 'create_time': int(time.mktime(l[4].timetuple()))} for l in r]
+
+    def enter_doctor(self):
+        cursor = self.DB.cursor()
+        cursor.execute("SELECT room.title, room._id FROM room JOIN room_permissions ON room._id = room_permissions.room join doctor on doctor._id = room_permissions.doctor WHERE room.patient = {} AND doctor._id = {}".format(self.patid, self.id))
+        r = cursor.fetchall()
+        cursor.close()
+        return [{'id': l[1], 'title': l[0]} for l in r]
 
     def post_room(self, **kwargs):
         if 'doctor' in kwargs:
@@ -126,6 +142,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
         )
 
         self.patid = self.headers.get('patid')
+        self.docid = self.headers.get('docid')
 
         J = None
 
@@ -166,6 +183,9 @@ class Handler(http.server.BaseHTTPRequestHandler):
             database='hack2019',
             auth_plugin='mysql_native_password',
         )
+
+        self.patid = self.headers.get('patid')
+        self.docid = self.headers.get('docid')
 
         if self.path.find('?') != -1:
             self.path, self.query_string = self.path.split('?', 1)
