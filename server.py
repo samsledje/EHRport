@@ -1,12 +1,12 @@
 import http.server, json, cgi
 import mysql.connector
-import itertools
-from Objects import *
+import time
 
 HOST = '0.0.0.0'
 PORT = 8080
 
 DB_HOST = '67.221.89.61'
+
 
 class Handler(http.server.BaseHTTPRequestHandler):
     def __init__(self, *args):
@@ -19,8 +19,13 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.enter_types = {
             '/boards': self.enter_board,
             '/rooms': self.enter_room,
-            '/doctors': self.enter_doctor
         }
+
+        self.put_types = {
+            '/rooms': self.post_room,
+            '/boards': self.post_board,
+        }
+
         super(Handler, self).__init__(*args)
 
     # Request Types
@@ -35,7 +40,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
     def get_rooms(self):
         # returns array of room names
         cursor = self.DB.cursor()
-        cursor.execute("SELECT room.title, room._id, room.activity FROM room JOIN patient ON room.patient = patient._id WHERE patient._id = {}".format(self.patid))
+        cursor.execute("SELECT room.title, room._id, room.activity FROM room WHERE room.patient = {}".format(self.patid))
         r = cursor.fetchall()
         cursor.close()
         return [{'id': l[1], 'title': l[0], 'activity': l[2]} for l in r]
@@ -51,37 +56,77 @@ class Handler(http.server.BaseHTTPRequestHandler):
     def enter_board(self):
         # returns json of events
         cursor = self.DB.cursor()
-        cursor.execute("")
+        cursor.execute("SELECT event_._id, event_.doctor, event_.contents, event_.tags, event_.create_time "
+                       "FROM event_ JOIN room ON event_.room = room._id JOIN event_tags ON event_._id = event_tags.event_ "
+                       "WHERE event_tags.tag = \"{}\" AND room.patient = {};".format(self.id, self.patid))
         r = cursor.fetchall()
         cursor.close()
-        return
+        return [{'id': l[0], 'doctor': l[1], 'contents': l[2], 'tag': l[3], 'create_time': int(time.mktime(l[4].timetuple()))} for l in r]
 
     def enter_room(self):
+        print("getting room {}".format(self.id))
         # returns array of events
         cursor = self.DB.cursor()
-        cursor.execute("")
+        cursor.execute("SELECT event_._id, event_.doctor, event_.contents, event_.tags, event_.create_time FROM event_ WHERE event_.room = {} ORDER BY event_.create_time;".format(self.id))
         r = cursor.fetchall()
         cursor.close()
-        return
+        return [{'id': l[0], 'doctor': l[1], 'contents': l[2], 'tag': l[3], 'create_time': int(time.mktime(l[4].timetuple()))} for l in r]
 
-    def enter_doctor(self):
-        # returns doctor info
-        cursor = self.DB.cursor()
-        cursor.execute("")
-        r = cursor.fetchall()
-        cursor.close()
-        return
+    def post_room(self, **kwargs):
+        if 'doctor' in kwargs:
+            cursor = self.DB.cursor()
+            cursor.execute("INSERT INTO room_permissions (doctor, room) VALUES ({}, {})".format(kwargs['doctor'], kwargs['id']))
+            cursor.close()
+            self.DB.commit()
+            return ""
+        elif 'activity' in kwargs:
+            cursor = self.DB.cursor()
+            cursor.execute("UPDATE room SET activity = {} WHERE _id = {}".format(kwargs['activity'], kwargs['id']))
+            cursor.close()
+            self.DB.commit()
+            return ""
+        elif 'event' in kwargs:
+            # TODO
+            pass
+
+    def post_board(self, **kwargs):
+        if 'doctor' in kwargs:
+            cursor = self.DB.cursor()
+            cursor.execute("INSERT INTO board_permissions (patient, doctor, board) VALUES ({}, {}, {})".format(self.patid, kwargs['doctor'], kwargs['id']))
+            cursor.close()
+            self.DB.commit()
+            return ""
 
     # Handle HTTP Requests
-    def do_POST(self):
-        return
-
-    def do_GET(self):
+    def do_PUT(self):
         self.DB = mysql.connector.connect(
             host=DB_HOST,
             user='hacker',
             passwd='hacker2019',
-            database='hack2019'
+            database='hack2019',
+            auth_plugin='mysql_native_password',
+        )
+
+        self.patid=1 #TODO
+
+        if self.path.find('?') != -1:
+            self.path, self.query_string = self.path.split('?', 1)
+            params = {k: v for k, v in [x.split('=') for x in self.query_string.split('&')]}
+            J = self.put_types[self.path](**params)
+
+
+        return J
+
+
+    def do_GET(self):
+        if self.path == '/favicon.ico':
+            return '{}'
+        self.DB = mysql.connector.connect(
+            host=DB_HOST,
+            user='hacker',
+            passwd='hacker2019',
+            database='hack2019',
+            auth_plugin='mysql_native_password',
         )
 
         if self.path.find('?') != -1:
